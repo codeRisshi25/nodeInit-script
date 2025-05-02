@@ -9,7 +9,7 @@
 # │     |_| \_|\___/ \__,_|\___|___|_| |_|_|\__|                │
 # │                                                             │
 # │            Created by Risshi • github.com/codeRisshi25      │
-# │                        Version 1.2                          │
+# │                        Version 1.2.1                          │
 # ╰─────────────────────────────────────────────────────────────╯
 #
 # This script sets up a new Node.js backend project with a basic MVC structure.
@@ -23,10 +23,10 @@
 # - Adds convenient npm scripts for development
 #
 # Usage:
-#   ./nodeinit.sh                    # Initialize in current directory
-#   ./nodeinit.sh my-project         # Create directory 'my-project' and initialize there
-#   nodeinit                         # If installed globally, initialize in current directory
-#   nodeinit my-project              # If installed globally, create directory and initialize
+#   ./nodeInit.sh                    # Initialize in current directory
+#   ./nodeInit.sh my-project         # Create directory 'my-project' and initialize there
+#   nodeInit                         # If installed globally, initialize in current directory
+#   nodeInit my-project              # If installed globally, create directory and initialize
 #
 # The script will automatically detect if you're in a Node.js project when
 # changing into directories (if you choose to install it globally).
@@ -81,7 +81,7 @@ if [ ! -f "/usr/local/bin/$(basename "$0")" ]; then
         echo "✅ The script is now globally executable as '$script_name'."
 
         # Create a hook to run the script on project initialization
-        sudo bash -c "cat <<EOL > /usr/local/bin/nodeinit-hook
+        sudo bash -c "cat <<EOL > /usr/local/bin/nodeInit-hook
 #!/bin/bash
 if [ -f \"package.json\" ]; then
     echo \"Node.js project detected. Run NodeInit? (yes/no)\"
@@ -91,11 +91,11 @@ if [ -f \"package.json\" ]; then
     fi
 fi
 EOL"
-        sudo chmod +x /usr/local/bin/nodeinit-hook
+        sudo chmod +x /usr/local/bin/nodeInit-hook
 
         # Add the hook to bash profile
-        if ! grep -q "/usr/local/bin/nodeinit-hook" ~/.bashrc; then
-            echo 'if [ -f "/usr/local/bin/nodeinit-hook" ]; then /usr/local/bin/nodeinit-hook; fi' >>~/.bashrc
+        if ! grep -q "/usr/local/bin/nodeInit-hook" ~/.bashrc; then
+            echo 'if [ -f "/usr/local/bin/nodeInit-hook" ]; then /usr/local/bin/nodeInit-hook; fi' >>~/.bashrc
             echo "✅ Hook added to automatically check for Node.js projects."
         fi
     fi

@@ -7,10 +7,11 @@
 ```
 
 NodeInit is a streamlined script designed to initialize Node.js projects with an MVC architecture quickly and efficiently. This tool sets up a standardized project structure with essential configurations to help you start coding right away.
-
-<img alt="Version" src="https://img.shields.io/badge/Version-1.2-brightgreen">
-<img alt="Bash" src="https://img.shields.io/badge/Shell-Bash-blue">
-<img alt="License" src="https://img.shields.io/badge/License-MIT-yellow">
+<p align="center">
+    <img alt="Version" src="https://img.shields.io/badge/Version-1.2.1-brightgreen">
+    <img alt="Bash" src="https://img.shields.io/badge/Shell-Bash-blue">
+    <img alt="License" src="https://img.shields.io/badge/License-MIT-yellow">
+</p>
 
 ## Features
 
@@ -45,13 +46,13 @@ chmod +x nodeInit.sh
 
 ```bash
 # Initialize in current directory
-./nodeinit.sh
+./nodeInit.sh
 # Create a new directory and initialize there
-./nodeinit.sh my-project
+./nodeInit.sh my-project
 # If installed globally, initialize in current directory
-nodeinit
+nodeInit
 # If installed globally, create directory and initialize
-nodeinit my-project          
+nodeInit my-project          
 ```
 
 ## Project Structure
