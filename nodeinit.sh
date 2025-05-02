@@ -9,7 +9,7 @@
 # │     |_| \_|\___/ \__,_|\___|___|_| |_|_|\__|                │
 # │                                                             │
 # │            Created by Risshi • github.com/codeRisshi25      │
-# │                        Version 1.1                          │
+# │                        Version 1.2                          │
 # ╰─────────────────────────────────────────────────────────────╯
 #
 # This script sets up a new Node.js backend project with a basic MVC structure.
@@ -23,14 +23,31 @@
 # - Adds convenient npm scripts for development
 #
 # Usage:
-#   ./nodeinit.sh       # Run in the directory where you want to initialize
-#   nodeinit            # If installed globally
+#   ./nodeinit.sh                    # Initialize in current directory
+#   ./nodeinit.sh my-project         # Create directory 'my-project' and initialize there
+#   nodeinit                         # If installed globally, initialize in current directory
+#   nodeinit my-project              # If installed globally, create directory and initialize
 #
 # The script will automatically detect if you're in a Node.js project when
 # changing into directories (if you choose to install it globally).
 #
 
-# Loeder function to show progress
+# Set target directory based on first argument
+TARGET_DIR="."
+if [ $# -gt 0 ]; then
+    TARGET_DIR="$1"
+    # Create directory if it doesn't exist
+    if [ ! -d "$TARGET_DIR" ]; then
+        echo "🚀 Creating directory '$TARGET_DIR'..."
+        mkdir -p "$TARGET_DIR"
+        echo "✅ Directory created."
+    fi
+    # Change to the target directory
+    cd "$TARGET_DIR" || { echo "❌ Failed to change to directory '$TARGET_DIR'"; exit 1; }
+    echo "✅ Working in directory: $(pwd)"
+fi
+
+# Loader function to show progress
 show_loader() {
     local pid=$1
     local delay=0.2
@@ -56,7 +73,7 @@ install_with_buffer() {
 # Check if the script is globally executable
 if [ ! -f "/usr/local/bin/$(basename "$0")" ]; then
     echo "Do you want to make this script globally executable? (yes/no)"
-    read make_global
+    read -r make_global
     if [ "$make_global" == "yes" ]; then
         script_name=$(basename "$0")
         sudo cp "$0" /usr/local/bin/$script_name
@@ -68,7 +85,7 @@ if [ ! -f "/usr/local/bin/$(basename "$0")" ]; then
 #!/bin/bash
 if [ -f \"package.json\" ]; then
     echo \"Node.js project detected. Run NodeInit? (yes/no)\"
-    read run_init
+    read -r run_init
     if [ \"\$run_init\" == \"yes\" ]; then
         $script_name
     fi
@@ -91,6 +108,18 @@ echo -e "\033[1;92m╔═══════════════════�
 echo -e "║           NodeInit by Risshi           ║"
 echo -e "╚════════════════════════════════════════╝\033[0m"
 
+# Get project name from directory
+if [ "$TARGET_DIR" = "." ]; then
+    # Use current directory name
+    PROJECT_NAME=$(basename "$(pwd)")
+else
+    # Use the specified directory name
+    PROJECT_NAME=$(basename "$TARGET_DIR")
+fi
+
+# Update messages to reflect that we're working in the target directory
+echo "🚀 Initializing Node.js project in '$PROJECT_NAME'..."
+
 # initialise a new Node.js project
 install_with_buffer "npm init -y" "Initializing Node.js project"
 
@@ -100,22 +129,22 @@ install_with_buffer "npm install express cors dotenv" "Installing core dependenc
 # optional dependencies
 echo "Optional Dependencies:"
 echo "Install MongoDB (mongoose)? (yes/no)"
-read install_mongo
+read -r install_mongo
 if [ "$install_mongo" == "yes" ]; then
     install_with_buffer "npm install mongoose" "Installing MongoDB (mongoose)"
 fi
 
 echo "Install Firebase (firebase-admin)? (yes/no)"
-read install_firebase
+read -r install_firebase
 if [ "$install_firebase" == "yes" ]; then
     install_with_buffer "npm install firebase-admin" "Installing Firebase Admin SDK"
 fi
 
 echo "Install additional dependencies? (yes/no)"
-read install_others
+read -r install_others
 if [ "$install_others" == "yes" ]; then
     echo "Enter dependencies (space-separated):"
-    read additional_dependencies
+    read -r additional_dependencies
     install_with_buffer "npm install $additional_dependencies" "Installing additional dependencies"
 fi
 
@@ -216,5 +245,9 @@ echo "✅ Updated package.json"
 
 # Final message
 echo -e "\033[1;32m✅ Node.js MVC Boilerplate Setup Complete!\033[0m"
-echo "🚀 Run 'npm start' to launch your application."
+if [ "$TARGET_DIR" != "." ]; then
+    echo "📁 Project created in directory: $TARGET_DIR"
+    echo "🚀 Go to the project directory: cd $TARGET_DIR"
+fi
+echo "▶️ Run 'npm start' to launch your application."
 echo "🔧 Run 'npm run dev' for development with auto-reload."
